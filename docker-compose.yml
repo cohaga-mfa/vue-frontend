@@ -1,10 +1,10 @@
 services:
   frontend:
-    image: node:18-alpine  # Use Node.js for development
+    image: node:18-alpine
     working_dir: /app
     volumes:
-      - ./frontend:/app  # Mount the frontend folder
+      - ./frontend:/app  # Mount local files
       - /app/node_modules  # Prevent overwriting node_modules
     ports:
-      - "5173:5173"  # Map Vite's default port
-    command: sh -c "npm run dev -- --host"
+      - "5173:5173"  # Vite default port
+    command: sh -c "npm install -g pnpm && pnpm install && pnpm run dev --host"

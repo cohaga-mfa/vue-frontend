@@ -1,15 +1,18 @@
-# Use an official Node.js image as the base
-FROM node:18-alpine AS builder
+# ---- Build Stage ----
+    FROM node:18-alpine AS builder
 
-# Set the working directory inside the container
-WORKDIR /app
-
-# Copy package.json and package-lock.json (if available) first
-COPY package*.json ./
-
-# Install dependencies
-RUN npm install
-
-# Copy the entire project
-COPY . .
-
+    # Install pnpm globally
+    RUN npm install -g pnpm
+    
+    # Set working directory inside the container
+    WORKDIR /app
+    
+    # Copy package.json and pnpm-lock.yaml first to leverage Docker cache
+    COPY package.json pnpm-lock.yaml ./
+    
+    # Install dependencies using pnpm
+    RUN pnpm install --frozen-lockfile
+    
+    # Copy the entire project
+    COPY . .
+    
