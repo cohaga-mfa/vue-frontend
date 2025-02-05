@@ -1,17 +1,15 @@
 services:
-  # frontend:
-  #   image: node:18-alpine
-  #   working_dir: /app
-  #   volumes:
-  #     - ./frontend:/app  # Mount local files
-  #     - /app/node_modules  # Prevent overwriting node_modules
-  #   ports:
-  #     - "5173:5173"  # Vite default port
-  #   command: sh -c "npm install -g pnpm && pnpm install && pnpm run dev --host"
-  #   depends_on:
-  #     - backend
-  #   networks:
-  #     - app_network
+  frontend:
+    image: node:18-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app  # Mount local files
+      - /app/node_modules  # Prevent overwriting node_modules
+    ports:
+      - "5173:5173"  # Vite default port
+    command: sh -c "npm install -g pnpm && pnpm install && pnpm run dev --host"
+    depends_on:
+      - backend
 
   backend:
     build:
@@ -22,12 +20,6 @@ services:
     volumes:
       - ./backend:/app
       - /app/vendor
-    environment:
-      - APP_ENV=local
-      - APP_DEBUG=true
-      - DB_CONNECTION=mongodb
-      - MONGODB_URI=mongodb://root:example@mongodb:27017
-      - MONGODB_DATABASE=laravel
     depends_on:
       - mongodb
 
@@ -36,8 +28,8 @@ services:
     container_name: mongodb
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
     ports:
       - "27017:27017"
     volumes:
