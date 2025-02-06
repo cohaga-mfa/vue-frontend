@@ -127,6 +127,23 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'op-log' => [
+            'driver' => 'monolog',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'handler' => \App\Logging\OpenSearchHandler::class,
+            'formatter' => \Monolog\Formatter\JsonFormatter::class,
+            'formatter_with' => [
+                'index' => env('OPENSEARCH_LOGS_INDEX', 'laravel_logs'),
+                'type' => '_doc',
+            ],
+            'handler_with' => [
+                'client' => \OpenSearch\ClientBuilder::create()->setHosts([env('OPENSEARCH_HOST', 'http://opensearch:9200')])->build(),
+                'options' => [
+                    'index' => env('OPENSEARCH_LOGS_INDEX', 'laravel_logs'),
+                ],
+            ]
+        ],
+
     ],
 
 ];
